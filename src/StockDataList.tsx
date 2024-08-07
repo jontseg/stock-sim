@@ -45,8 +45,8 @@ const StockDataList: React.FC<StockDataListProps> = ({ searchTerm }) => {
 
         // Calculate min and max dates for each symbol
         const symbolDateRanges: SymbolDateRange[] = Object.entries(datesBySymbol).map(([symbol, dates]) => {
-          const minDate = new Date(Math.min(...dates));
-          const maxDate = new Date(Math.max(...dates));
+          const minDate = new Date(Math.min(...dates.map(date => date.getTime())));
+          const maxDate = new Date(Math.max(...dates.map(date => date.getTime())));
           return { symbol, minDate, maxDate };
         });
 
