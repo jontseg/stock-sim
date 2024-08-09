@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import StockDataList from './StockDataList'; // Adjust the import path as necessary
 
-const StockList: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState<string>('');
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
+interface StockListProps {
+  onInputChange: (value: string) => void;
+  searchTerm: string;
+}
+const StockList: React.FC<StockListProps> = ({ onInputChange, searchTerm }) => {
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onInputChange(event.target.value);
   }
 
   return (
@@ -13,8 +17,7 @@ const StockList: React.FC = () => {
       <input
         type="text"
         placeholder="Search stock symbols"
-        value={searchTerm}
-        onChange={handleSearchChange}
+        onChange={handleChange}
       />
       <StockDataList searchTerm={searchTerm} />
     </div>
