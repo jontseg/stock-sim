@@ -4,6 +4,7 @@ import { Amplify } from 'aws-amplify'; // Import Amplify
 import { generateClient } from 'aws-amplify/api';
 import { useEffect, useState } from 'react';
 import { Schema } from '../amplify/data/resource';
+import { Stock } from './API';
 import StockChart from './StockChart';
 import StockList from './StockList';
 // import config from './aws-exports';
@@ -77,7 +78,7 @@ async function showStocks() {
 
 
 function App() {
-  const [stocks, setStocks] = useState([]);
+  const [stocks, setStocks] = useState<Stock[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
 
   const handleSearchChange = (value: string) => {
@@ -104,7 +105,7 @@ function App() {
         <button onClick={signOut}>Sign out</button>
         <StockChart/>
         <StockList onInputChange={handleSearchChange} searchTerm={searchTerm}/>
-        <ul>{stocks && stocks.map(stock => <li key={stock.stockSymbol}>{stock.stockSymbol}</li>)}</ul>
+        <ul>{stocks && stocks.map(stock => <li key={stock.StockSymbol}>{stock.StockSymbol}</li>)}</ul>
         {/* <ul>{stocks.map(stock => <li key={stock.stockSymbol}>{stock.stockSymbol}</li>)}</ul> */}
       </main>
         
