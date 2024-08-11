@@ -1,0 +1,144 @@
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
+
+type Mutation {
+  createStock(input: CreateStockInput!): Stock
+  deleteStock(input: DeleteStockInput!): Stock
+  updateStock(input: UpdateStockInput!): Stock
+}
+
+type Query {
+  getStock(Date: String!, StockSymbol: String!): Stock
+  listStocks(filter: TableStockFilterInput, limit: Int, nextToken: String): StockConnection
+}
+
+type Stock {
+  Close: Float!
+  Date: String!
+  High: Float!
+  Low: Float!
+  Open: Float!
+  OpenInt: Int!
+  StockSymbol: String!
+  Volume: Int!
+}
+
+type StockConnection {
+  items: [Stock]
+  nextToken: String
+}
+
+type Subscription {
+  onCreateStock(Close: Float, Date: String, High: Float, Open: Float, StockSymbol: String): Stock @aws_subscribe(mutations : ["createStock"])
+  onDeleteStock(Close: Float, Date: String, High: Float, Open: Float, StockSymbol: String): Stock @aws_subscribe(mutations : ["deleteStock"])
+  onUpdateStock(Close: Float, Date: String, High: Float, Open: Float, StockSymbol: String): Stock @aws_subscribe(mutations : ["updateStock"])
+}
+
+input CreateStockInput {
+  Close: Float!
+  Date: String!
+  High: Float!
+  Low: Float!
+  Open: Float!
+  OpenInt: Int!
+  StockSymbol: String!
+  Volume: Int!
+}
+
+input DeleteStockInput {
+  Date: String!
+  StockSymbol: String!
+}
+
+input ModelSizeInput {
+  between: [Int]
+  eq: Int
+  ge: Int
+  gt: Int
+  le: Int
+  lt: Int
+  ne: Int
+}
+
+input TableBooleanFilterInput {
+  attributeExists: Boolean
+  eq: Boolean
+  ne: Boolean
+}
+
+input TableFloatFilterInput {
+  attributeExists: Boolean
+  between: [Float]
+  eq: Float
+  ge: Float
+  gt: Float
+  le: Float
+  lt: Float
+  ne: Float
+}
+
+input TableIDFilterInput {
+  attributeExists: Boolean
+  beginsWith: ID
+  between: [ID]
+  contains: ID
+  eq: ID
+  ge: ID
+  gt: ID
+  le: ID
+  lt: ID
+  ne: ID
+  notContains: ID
+  size: ModelSizeInput
+}
+
+input TableIntFilterInput {
+  attributeExists: Boolean
+  between: [Int]
+  eq: Int
+  ge: Int
+  gt: Int
+  le: Int
+  lt: Int
+  ne: Int
+}
+
+input TableStockFilterInput {
+  Close: TableFloatFilterInput
+  Date: TableStringFilterInput
+  High: TableFloatFilterInput
+  Low: TableFloatFilterInput
+  Open: TableFloatFilterInput
+  OpenInt: TableIntFilterInput
+  StockSymbol: TableStringFilterInput
+  Volume: TableIntFilterInput
+}
+
+input TableStringFilterInput {
+  attributeExists: Boolean
+  beginsWith: String
+  between: [String]
+  contains: String
+  eq: String
+  ge: String
+  gt: String
+  le: String
+  lt: String
+  ne: String
+  notContains: String
+  size: ModelSizeInput
+}
+
+input UpdateStockInput {
+  Close: Float
+  Date: String!
+  High: Float
+  Low: Float
+  Open: Float
+  OpenInt: Int
+  StockSymbol: String!
+  Volume: Int
+}

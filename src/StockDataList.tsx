@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
+
 interface DataItem {
   StockSymbol: string;
   Date: string; // Adjust this field name according to your actual data
@@ -16,17 +17,22 @@ interface StockDataListProps {
   searchTerm: string;
 }
 
+
+
 const StockDataList: React.FC<StockDataListProps> = ({ searchTerm }) => {
   const [stockList, setStockList] = useState<SymbolDateRange[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  
+  
 
   useEffect(() => {
     const url = 'https://7pc5bok4ajfnguozu7bhb3utj40lqaae.lambda-url.us-west-1.on.aws/';
 
     axios.get<DataItem[]>(url)
       .then(response => {
-        console.log('API Response:', response.data); // Log response to inspect structure
+        // console.log('API Response:', response.data); // Log response to inspect structure
         if (!Array.isArray(response.data)) {
           throw new Error('Unexpected response format: Data is not an array');
         }
