@@ -104,7 +104,7 @@ function App() {
         <button onClick={signOut}>Sign out</button>
         <StockChart/>
         <StockList onInputChange={handleSearchChange} searchTerm={searchTerm}/>
-        {/* <ul>{stocks && stocks.map(stock => <li key={stock.stockSymbol}>{stock.StockSymbol}</li>)}</ul> */}
+        <ul>{stocks && stocks.map(stock => <li key={stock.stockSymbol}>{stock.stockSymbol}</li>)}</ul>
         {/* <ul>{stocks.map(stock => <li key={stock.stockSymbol}>{stock.stockSymbol}</li>)}</ul> */}
       </main>
         

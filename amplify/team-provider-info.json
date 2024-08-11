@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-stocksim-dev-3d020-authRole",
+      "UnauthRoleArn": "arn:aws:iam::730335579190:role/amplify-stocksim-dev-3d020-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::730335579190:role/amplify-stocksim-dev-3d020-authRole",
+      "Region": "us-west-1",
+      "DeploymentBucketName": "amplify-stocksim-dev-3d020-deployment",
+      "UnauthRoleName": "amplify-stocksim-dev-3d020-unauthRole",
+      "StackName": "amplify-stocksim-dev-3d020",
+      "StackId": "arn:aws:cloudformation:us-west-1:730335579190:stack/amplify-stocksim-dev-3d020/45256a60-582c-11ef-b545-06e6eb43d023",
+      "AmplifyAppId": "dwx5vdsb9njam"
+    }
+  }
+}
