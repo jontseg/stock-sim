@@ -3,26 +3,37 @@
 //  This file was automatically generated and should not be edited.
 
 export type CreateStockInput = {
-  Close: number,
   Date: string,
+  StockSymbol: string,
+  Open: number,
+  Close: number,
   High: number,
   Low: number,
-  Open: number,
-  OpenInt: number,
-  StockSymbol: string,
   Volume: number,
+  OpenInt: number,
 };
 
 export type Stock = {
   __typename: "Stock",
-  Close: number,
   Date: string,
+  StockSymbol: string,
+  Open: number,
+  Close: number,
   High: number,
   Low: number,
-  Open: number,
-  OpenInt: number,
-  StockSymbol: string,
   Volume: number,
+  OpenInt: number,
+};
+
+export type UpdateStockInput = {
+  Date: string,
+  StockSymbol: string,
+  Open?: number | null,
+  Close?: number | null,
+  High?: number | null,
+  Low?: number | null,
+  Volume?: number | null,
+  OpenInt?: number | null,
 };
 
 export type DeleteStockInput = {
@@ -30,73 +41,62 @@ export type DeleteStockInput = {
   StockSymbol: string,
 };
 
-export type UpdateStockInput = {
-  Close?: number | null,
-  Date: string,
-  High?: number | null,
-  Low?: number | null,
-  Open?: number | null,
-  OpenInt?: number | null,
-  StockSymbol: string,
-  Volume?: number | null,
-};
-
 export type TableStockFilterInput = {
-  Close?: TableFloatFilterInput | null,
   Date?: TableStringFilterInput | null,
+  StockSymbol?: TableStringFilterInput | null,
+  Open?: TableFloatFilterInput | null,
+  Close?: TableFloatFilterInput | null,
   High?: TableFloatFilterInput | null,
   Low?: TableFloatFilterInput | null,
-  Open?: TableFloatFilterInput | null,
-  OpenInt?: TableIntFilterInput | null,
-  StockSymbol?: TableStringFilterInput | null,
   Volume?: TableIntFilterInput | null,
-};
-
-export type TableFloatFilterInput = {
-  attributeExists?: boolean | null,
-  between?: Array< number | null > | null,
-  eq?: number | null,
-  ge?: number | null,
-  gt?: number | null,
-  le?: number | null,
-  lt?: number | null,
-  ne?: number | null,
+  OpenInt?: TableIntFilterInput | null,
 };
 
 export type TableStringFilterInput = {
-  attributeExists?: boolean | null,
-  beginsWith?: string | null,
-  between?: Array< string | null > | null,
-  contains?: string | null,
+  ne?: string | null,
   eq?: string | null,
-  ge?: string | null,
-  gt?: string | null,
   le?: string | null,
   lt?: string | null,
-  ne?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  contains?: string | null,
   notContains?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+  attributeExists?: boolean | null,
   size?: ModelSizeInput | null,
 };
 
 export type ModelSizeInput = {
-  between?: Array< number | null > | null,
+  ne?: number | null,
   eq?: number | null,
-  ge?: number | null,
-  gt?: number | null,
   le?: number | null,
   lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+};
+
+export type TableFloatFilterInput = {
   ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  attributeExists?: boolean | null,
 };
 
 export type TableIntFilterInput = {
-  attributeExists?: boolean | null,
-  between?: Array< number | null > | null,
+  ne?: number | null,
   eq?: number | null,
-  ge?: number | null,
-  gt?: number | null,
   le?: number | null,
   lt?: number | null,
-  ne?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  attributeExists?: boolean | null,
 };
 
 export type StockConnection = {
@@ -112,32 +112,14 @@ export type CreateStockMutationVariables = {
 export type CreateStockMutation = {
   createStock?:  {
     __typename: "Stock",
-    Close: number,
     Date: string,
+    StockSymbol: string,
+    Open: number,
+    Close: number,
     High: number,
     Low: number,
-    Open: number,
-    OpenInt: number,
-    StockSymbol: string,
     Volume: number,
-  } | null,
-};
-
-export type DeleteStockMutationVariables = {
-  input: DeleteStockInput,
-};
-
-export type DeleteStockMutation = {
-  deleteStock?:  {
-    __typename: "Stock",
-    Close: number,
-    Date: string,
-    High: number,
-    Low: number,
-    Open: number,
     OpenInt: number,
-    StockSymbol: string,
-    Volume: number,
   } | null,
 };
 
@@ -148,33 +130,51 @@ export type UpdateStockMutationVariables = {
 export type UpdateStockMutation = {
   updateStock?:  {
     __typename: "Stock",
-    Close: number,
     Date: string,
+    StockSymbol: string,
+    Open: number,
+    Close: number,
     High: number,
     Low: number,
-    Open: number,
-    OpenInt: number,
-    StockSymbol: string,
     Volume: number,
+    OpenInt: number,
+  } | null,
+};
+
+export type DeleteStockMutationVariables = {
+  input: DeleteStockInput,
+};
+
+export type DeleteStockMutation = {
+  deleteStock?:  {
+    __typename: "Stock",
+    Date: string,
+    StockSymbol: string,
+    Open: number,
+    Close: number,
+    High: number,
+    Low: number,
+    Volume: number,
+    OpenInt: number,
   } | null,
 };
 
 export type GetStockQueryVariables = {
-  Date: string,
   StockSymbol: string,
+  Date: string,
 };
 
 export type GetStockQuery = {
   getStock?:  {
     __typename: "Stock",
-    Close: number,
     Date: string,
+    StockSymbol: string,
+    Open: number,
+    Close: number,
     High: number,
     Low: number,
-    Open: number,
-    OpenInt: number,
-    StockSymbol: string,
     Volume: number,
+    OpenInt: number,
   } | null,
 };
 
@@ -189,81 +189,81 @@ export type ListStocksQuery = {
     __typename: "StockConnection",
     items?:  Array< {
       __typename: "Stock",
-      Close: number,
       Date: string,
+      StockSymbol: string,
+      Open: number,
+      Close: number,
       High: number,
       Low: number,
-      Open: number,
-      OpenInt: number,
-      StockSymbol: string,
       Volume: number,
+      OpenInt: number,
     } | null > | null,
     nextToken?: string | null,
   } | null,
 };
 
 export type OnCreateStockSubscriptionVariables = {
-  Close?: number | null,
   Date?: string | null,
-  High?: number | null,
-  Open?: number | null,
   StockSymbol?: string | null,
+  Open?: number | null,
+  Close?: number | null,
+  High?: number | null,
 };
 
 export type OnCreateStockSubscription = {
   onCreateStock?:  {
     __typename: "Stock",
-    Close: number,
     Date: string,
+    StockSymbol: string,
+    Open: number,
+    Close: number,
     High: number,
     Low: number,
-    Open: number,
-    OpenInt: number,
-    StockSymbol: string,
     Volume: number,
-  } | null,
-};
-
-export type OnDeleteStockSubscriptionVariables = {
-  Close?: number | null,
-  Date?: string | null,
-  High?: number | null,
-  Open?: number | null,
-  StockSymbol?: string | null,
-};
-
-export type OnDeleteStockSubscription = {
-  onDeleteStock?:  {
-    __typename: "Stock",
-    Close: number,
-    Date: string,
-    High: number,
-    Low: number,
-    Open: number,
     OpenInt: number,
-    StockSymbol: string,
-    Volume: number,
   } | null,
 };
 
 export type OnUpdateStockSubscriptionVariables = {
-  Close?: number | null,
   Date?: string | null,
-  High?: number | null,
-  Open?: number | null,
   StockSymbol?: string | null,
+  Open?: number | null,
+  Close?: number | null,
+  High?: number | null,
 };
 
 export type OnUpdateStockSubscription = {
   onUpdateStock?:  {
     __typename: "Stock",
-    Close: number,
     Date: string,
+    StockSymbol: string,
+    Open: number,
+    Close: number,
     High: number,
     Low: number,
-    Open: number,
-    OpenInt: number,
-    StockSymbol: string,
     Volume: number,
+    OpenInt: number,
+  } | null,
+};
+
+export type OnDeleteStockSubscriptionVariables = {
+  Date?: string | null,
+  StockSymbol?: string | null,
+  Open?: number | null,
+  Close?: number | null,
+  High?: number | null,
+};
+
+export type OnDeleteStockSubscription = {
+  onDeleteStock?:  {
+    __typename: "Stock",
+    Date: string,
+    StockSymbol: string,
+    Open: number,
+    Close: number,
+    High: number,
+    Low: number,
+    Volume: number,
+    OpenInt: number,
   } | null,
 };

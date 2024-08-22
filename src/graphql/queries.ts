@@ -8,16 +8,16 @@ type GeneratedQuery<InputType, OutputType> = string & {
   __generatedQueryOutput: OutputType;
 };
 
-export const getStock = /* GraphQL */ `query GetStock($Date: String!, $StockSymbol: String!) {
-  getStock(Date: $Date, StockSymbol: $StockSymbol) {
-    Close
+export const getStock = /* GraphQL */ `query GetStock($StockSymbol: String!, $Date: String!) {
+  getStock(StockSymbol: $StockSymbol, Date: $Date) {
     Date
+    StockSymbol
+    Open
+    Close
     High
     Low
-    Open
-    OpenInt
-    StockSymbol
     Volume
+    OpenInt
     __typename
   }
 }
@@ -29,14 +29,14 @@ export const listStocks = /* GraphQL */ `query ListStocks(
 ) {
   listStocks(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
-      Close
       Date
+      StockSymbol
+      Open
+      Close
       High
       Low
-      Open
-      OpenInt
-      StockSymbol
       Volume
+      OpenInt
       __typename
     }
     nextToken

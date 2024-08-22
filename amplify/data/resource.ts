@@ -30,14 +30,14 @@ specifies that any user authenticated via an API key can "create", "read",
 const schema = a.schema({
   Stock: a
     .model({
-     close : a.string(),
-     date : a.string(),
-     high : a.float(),
-     low : a.float(),
-     open : a.float(),
-     openInt : a.integer(),
-     stockSymbol : a.string(),
-     volume : a.integer() 
+     Close : a.string(),
+     Date : a.string(),
+     High : a.float(),
+     Low : a.float(),
+     Open : a.float(),
+     OpenInt : a.integer(),
+     StockSymbol : a.string(),
+     Volume : a.integer() 
     })
     .authorization((allow) => [allow.publicApiKey()]),
 });

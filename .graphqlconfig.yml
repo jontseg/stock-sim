@@ -1,6 +1,6 @@
 projects:
-  Codegen Project:
-    schemaPath: schema.graphql
+  StockAPI:
+    schemaPath: src/graphql/schema.json
     includes:
       - src/graphql/**/*.ts
     excludes:
@@ -11,8 +11,9 @@ projects:
         codeGenTarget: typescript
         generatedFileName: src/API.ts
         docsFilePath: src/graphql
-        region: us-east-1
-        apiId: null
-        frontend: javascript
-        framework: react
+        region: us-west-1
+        apiId: 7xnoy6qg5jbj5ixmnt2fcom7pe
         maxDepth: 2
+extensions:
+  amplify:
+    version: 3

@@ -1,60 +1,88 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
+import './index.css';
 
 
+import client from './APIClient'; // Import the shared client
 
+const LIST_STOCKS_QUERY = `
+  query {
+    listStocks {
+      items {
+        StockSymbol
+        Date
+        Open
+      }
+    }
+  }
+`;
 
-const StockChart: React.FC = () => {
+async function showStocks() {
+  try {
+    const response = await client.graphql({
+      query: LIST_STOCKS_QUERY,
+    });
+
+    if ('data' in response && response.data) {
+      const stocks = response.data.listStocks?.items;
+
+      return stocks;
+    } else {
+      console.error('Unexpected response structure:', response);
+    }
+  } catch (error) {
+    console.error('Error listing stocks:', error);
+    throw error;
+  }
+}
+
+interface StockChartProps {
+  stockSymbol: string;
+  dateRange: [Date | null, Date | null];
+  onCurrentPriceChange: (currentPrice: number) => void;
+}
+  
+const StockChart: React.FC<StockChartProps> = ({ stockSymbol, dateRange, onCurrentPriceChange  }) => {
+  const [data, setData] = useState<{ Date: string; Open: number }[]>([]);
+
+  useEffect(() => {
+    const fetchStockData = async () => {
+      const stocks = await showStocks();
+      if (stocks) {
+        const [startDate, endDate] = dateRange;
+        // Filter for the specific stock symbol "PLYM"
+        const filteredStocks = stocks
+          .filter((stock: { StockSymbol: string; Date: string }) => {
+            const stockDate = new Date(stock.Date);
+            return (stock.StockSymbol === stockSymbol &&
+              (!startDate || stockDate >= startDate) &&
+              (!endDate || stockDate <= endDate)
+            );
+          })
+          .map((stock: { Date: string; Open: number }) => ({
+            Date: new Date(stock.Date).toLocaleDateString(), // Format date for display
+            Open: stock.Open,
+          }));
+        setData(filteredStocks);
+        onCurrentPriceChange(filteredStocks[filteredStocks.length-1]["Open"])
+      }
+    };
+
+    fetchStockData();
+  }, [stockSymbol, dateRange, onCurrentPriceChange]);
+
 
   return (
-    <div>
-      <h1>Stock List</h1>
+    <div className='chart-container'>
+      <LineChart width={600} height={300} data={data} margin={{ top: 4, right: 20, bottom: 5, left: 0 }}>
+        <Line type="monotone" dataKey="Open" stroke="#8884d8" />
+        <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+        <XAxis dataKey="Date" />
+        <YAxis />
+        <Tooltip />
+      </LineChart>
     </div>
   );
 };
-
-
-
-
-
-
-// const data = [
-//     { name: 'Page A', uv: 400, pv: 2400, amt: 2400 },
-//     { name: 'Page B', uv: 300, pv: 1398, amt: 2210 },
-//     { name: 'Page C', uv: 200, pv: 9800, amt: 2290 },
-//     { name: 'Page D', uv: 278, pv: 3908, amt: 2000 },
-//     { name: 'Page E', uv: 189, pv: 4800, amt: 2181 },
-//     { name: 'Page F', uv: 239, pv: 3800, amt: 2500 },
-//     { name: 'Page G', uv: 349, pv: 4300, amt: 2100 },
-//     { name: 'Page H', uv: 400, pv: 2400, amt: 2400 },
-//     { name: 'Page I', uv: 300, pv: 1398, amt: 2210 },
-//     { name: 'Page J', uv: 450, pv: 3000, amt: 2700 },
-//     { name: 'Page K', uv: 320, pv: 2300, amt: 2300 },
-//     { name: 'Page L', uv: 270, pv: 3800, amt: 2600 }
-//   ];
-
-
-  
-// const StockChart: React.FC = () => {
-
-
-  
-  
-//   return (
-//     <>
-//       <LineChart width={600} height={300} data={data} margin={{ top: 4, right: 20, bottom: 5, left: 0}}>
-//         <Line type="monotone" dataKey="uv" stroke="#8884d8"/>
-//         <CartesianGrid stroke="#ccc" strokeDasharray= "5 5"/>
-//         <XAxis dataKey="name" />
-//         <YAxis />
-//         <Tooltip/>
-//       </LineChart>
-//       <ul>
-//         {items.map((item) => (
-//           <li key={item.id}>{item.name}: {item.description}</li>
-//         ))}
-//       </ul>
-//     </>
-//   );
-// };
 
 export default StockChart;

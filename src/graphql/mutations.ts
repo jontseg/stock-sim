@@ -10,14 +10,14 @@ type GeneratedMutation<InputType, OutputType> = string & {
 
 export const createStock = /* GraphQL */ `mutation CreateStock($input: CreateStockInput!) {
   createStock(input: $input) {
-    Close
     Date
+    StockSymbol
+    Open
+    Close
     High
     Low
-    Open
-    OpenInt
-    StockSymbol
     Volume
+    OpenInt
     __typename
   }
 }
@@ -25,37 +25,37 @@ export const createStock = /* GraphQL */ `mutation CreateStock($input: CreateSto
   APITypes.CreateStockMutationVariables,
   APITypes.CreateStockMutation
 >;
-export const deleteStock = /* GraphQL */ `mutation DeleteStock($input: DeleteStockInput!) {
-  deleteStock(input: $input) {
-    Close
-    Date
-    High
-    Low
-    Open
-    OpenInt
-    StockSymbol
-    Volume
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.DeleteStockMutationVariables,
-  APITypes.DeleteStockMutation
->;
 export const updateStock = /* GraphQL */ `mutation UpdateStock($input: UpdateStockInput!) {
   updateStock(input: $input) {
-    Close
     Date
+    StockSymbol
+    Open
+    Close
     High
     Low
-    Open
-    OpenInt
-    StockSymbol
     Volume
+    OpenInt
     __typename
   }
 }
 ` as GeneratedMutation<
   APITypes.UpdateStockMutationVariables,
   APITypes.UpdateStockMutation
+>;
+export const deleteStock = /* GraphQL */ `mutation DeleteStock($input: DeleteStockInput!) {
+  deleteStock(input: $input) {
+    Date
+    StockSymbol
+    Open
+    Close
+    High
+    Low
+    Volume
+    OpenInt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteStockMutationVariables,
+  APITypes.DeleteStockMutation
 >;

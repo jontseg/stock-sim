@@ -9,27 +9,27 @@ type GeneratedSubscription<InputType, OutputType> = string & {
 };
 
 export const onCreateStock = /* GraphQL */ `subscription OnCreateStock(
-  $Close: Float
   $Date: String
-  $High: Float
-  $Open: Float
   $StockSymbol: String
+  $Open: Float
+  $Close: Float
+  $High: Float
 ) {
   onCreateStock(
-    Close: $Close
     Date: $Date
-    High: $High
-    Open: $Open
     StockSymbol: $StockSymbol
+    Open: $Open
+    Close: $Close
+    High: $High
   ) {
-    Close
     Date
+    StockSymbol
+    Open
+    Close
     High
     Low
-    Open
-    OpenInt
-    StockSymbol
     Volume
+    OpenInt
     __typename
   }
 }
@@ -37,61 +37,61 @@ export const onCreateStock = /* GraphQL */ `subscription OnCreateStock(
   APITypes.OnCreateStockSubscriptionVariables,
   APITypes.OnCreateStockSubscription
 >;
-export const onDeleteStock = /* GraphQL */ `subscription OnDeleteStock(
-  $Close: Float
-  $Date: String
-  $High: Float
-  $Open: Float
-  $StockSymbol: String
-) {
-  onDeleteStock(
-    Close: $Close
-    Date: $Date
-    High: $High
-    Open: $Open
-    StockSymbol: $StockSymbol
-  ) {
-    Close
-    Date
-    High
-    Low
-    Open
-    OpenInt
-    StockSymbol
-    Volume
-    __typename
-  }
-}
-` as GeneratedSubscription<
-  APITypes.OnDeleteStockSubscriptionVariables,
-  APITypes.OnDeleteStockSubscription
->;
 export const onUpdateStock = /* GraphQL */ `subscription OnUpdateStock(
-  $Close: Float
   $Date: String
-  $High: Float
-  $Open: Float
   $StockSymbol: String
+  $Open: Float
+  $Close: Float
+  $High: Float
 ) {
   onUpdateStock(
-    Close: $Close
     Date: $Date
-    High: $High
-    Open: $Open
     StockSymbol: $StockSymbol
+    Open: $Open
+    Close: $Close
+    High: $High
   ) {
-    Close
     Date
+    StockSymbol
+    Open
+    Close
     High
     Low
-    Open
-    OpenInt
-    StockSymbol
     Volume
+    OpenInt
     __typename
   }
 }
 ` as GeneratedSubscription<
   APITypes.OnUpdateStockSubscriptionVariables,
   APITypes.OnUpdateStockSubscription
+>;
+export const onDeleteStock = /* GraphQL */ `subscription OnDeleteStock(
+  $Date: String
+  $StockSymbol: String
+  $Open: Float
+  $Close: Float
+  $High: Float
+) {
+  onDeleteStock(
+    Date: $Date
+    StockSymbol: $StockSymbol
+    Open: $Open
+    Close: $Close
+    High: $High
+  ) {
+    Date
+    StockSymbol
+    Open
+    Close
+    High
+    Low
+    Volume
+    OpenInt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteStockSubscriptionVariables,
+  APITypes.OnDeleteStockSubscription
 >;

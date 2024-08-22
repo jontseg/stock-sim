@@ -4,9 +4,10 @@ import StockDataList from './StockDataList'; // Adjust the import path as necess
 
 interface StockListProps {
   onInputChange: (value: string) => void;
+  onStockClick: (value: string, startDate: Date | null, endDate: Date | null) => void;
   searchTerm: string;
 }
-const StockList: React.FC<StockListProps> = ({ onInputChange, searchTerm }) => {
+const StockList: React.FC<StockListProps> = ({ onInputChange, onStockClick, searchTerm }) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onInputChange(event.target.value);
@@ -19,7 +20,7 @@ const StockList: React.FC<StockListProps> = ({ onInputChange, searchTerm }) => {
         placeholder="Search stock symbols"
         onChange={handleChange}
       />
-      <StockDataList searchTerm={searchTerm} />
+      <StockDataList searchTerm={searchTerm} handleClick={onStockClick}/>
     </div>
   );
 };
