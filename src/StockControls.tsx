@@ -1,5 +1,5 @@
 import './index.css';
-
+import StockPredict from './StockPredict';
 
 
 interface StockControlsProps {
@@ -11,10 +11,12 @@ interface StockControlsProps {
   onBuy: () => void;
   onSell: () => void;
   stocksOwned: number;
+  onBuyChange: (value: number) => void;
+  onSellChange: (value: number) => void;
 }
   
-const StockControls: React.FC<StockControlsProps> = ({ onAdvanceChange, advanceDateValue, onAdvanceClick, cash, currentPrice, onBuy, onSell, stocksOwned }) => {
-
+const StockControls: React.FC<StockControlsProps> = ({ onAdvanceChange, advanceDateValue, onAdvanceClick, cash, currentPrice, onBuy, onSell, stocksOwned, onBuyChange, onSellChange }) => {
+  
 
   return (
     <div className='chart-container'>
@@ -27,14 +29,38 @@ const StockControls: React.FC<StockControlsProps> = ({ onAdvanceChange, advanceD
             <p>Advance date value: {advanceDateValue}</p>
         </div>
         <div>
-          <button onClick={onBuy}>Buy</button>
-          <button onClick={onSell}>Sell</button>
+          <div>
+            <button
+             onClick={onBuy}
+            >
+              Buy
+            </button>
+            <input
+              type="number"
+              min="1"
+              onChange={(event) => onBuyChange(Number(event.target.value))}>
+            </input>
+          </div>
+          <div>
+            <button onClick={onSell}>Sell</button>
+            <input
+              type="number"
+              min="1"
+              onChange={(event) => onSellChange(Number(event.target.value))}>
+            </input>
+          </div>
         </div>
         <div>
           <p>Cash: {cash}</p>
-          <p>Current Price: {currentPrice}</p>
+          <div>
+            <p>Current Price: {currentPrice}</p>
+            <StockPredict 
+              currentPrice={currentPrice}>
+            </StockPredict>
+          </div>
           <p>Stocks Owned: {stocksOwned}</p>
           <p>Portfolio Value: {stocksOwned*currentPrice}</p>
+          <p>Profit/Loss: {cash - (stocksOwned*currentPrice) - 10000}</p>
         </div>
     </div>
   );

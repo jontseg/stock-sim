@@ -6,6 +6,24 @@ import StockControls from './StockControls';
 import StockList from './StockList';
 
 
+async function showStocks() {
+  try {
+    const response = await client.graphql({
+      query: LIST_STOCKS_QUERY,
+    });
+
+    if ('data' in response && response.data) {
+      const stocks = response.data.listStocks?.items;
+      return stocks;
+    } else {
+      console.error('Unexpected response structure:', response);
+    }
+  } catch (error) {
+    console.error('Error listing stocks:', error);
+    throw error;
+  }
+}
+
 
 function App() {
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -15,27 +33,63 @@ function App() {
   const [cash, setCash] = useState<number>(10000);
   const [currentPrice, setCurrentPrice] = useState<number>(0);
   const [stocksOwned, setStocksOwned] = useState<number>(0);
+  const [numberStocksBuy, setNumberStocksBuy] = useState<number>(0);
+  const [numberStocksSell, setNumberStocksSell] = useState<number>(0);
+  // const [data, setData] = useState<{ Date: string; Open: number }[]>([]);
+  
 
+  // useEffect(() => {
+  //   const fetchStockData = async () => {
+  //     const stocks = await showStocks();
+  //     if (stocks) {
+  //       const [startDate, endDate] = dateRange;
+  //       // Filter for the specific stock symbol "PLYM"
+  //       const filteredStocks = stocks
+  //         .filter((stock: { StockSymbol: string; Date: string }) => {
+  //           const stockDate = new Date(stock.Date);
+  //           return (stock.StockSymbol === stockSymbol &&
+  //             (!startDate || stockDate >= startDate) &&
+  //             (!endDate || stockDate <= endDate)
+  //           );
+  //         })
+  //         .map((stock: { Date: string; Open: number }) => ({
+  //           Date: new Date(stock.Date).toLocaleDateString(), // Format date for display
+  //           Open: stock.Open,
+  //         }));
+  //       setData(filteredStocks);
+  //       setCurrentPrice(filteredStocks[filteredStocks.length-1]["Open"])
+  //     }
+  //   };
 
+  //   fetchStockData();
+  // }, [stockSymbol, dateRange]);
 
-  const handleBuyStock = () => {
-    if (cash >= currentPrice){
-      const newStocksOwned = stocksOwned + 1
-      const newCash = cash - currentPrice;
+  const handleBuyStock = (numStocks: number) => {
+    if (cash >= currentPrice * numStocks){
+      const newStocksOwned = stocksOwned + numStocks
+      const newCash = cash - (currentPrice * numStocks);
       setStocksOwned(newStocksOwned);
       setCash(newCash);
     }
     
   }
 
-  const handleSellStock = () => {
-    if (stocksOwned > 0) {
-      const newStocksOwned = stocksOwned - 1
-      const newCash = cash + currentPrice;
+  const handleSellStock = (numStocks: number) => {
+    if (stocksOwned >= numStocks) {
+      const newStocksOwned = stocksOwned - numStocks
+      const newCash = cash + (currentPrice * numStocks);
       setCash(newCash);
       setStocksOwned(newStocksOwned)
     }
     
+  }
+
+  const handleBuyChange = (value: number) => {
+    setNumberStocksBuy(value);
+  }
+
+  const handleSellChange = (value: number) => {
+    setNumberStocksSell(value);
   }
 
   const handleSearchChange = (value: string) => {
@@ -49,6 +103,7 @@ function App() {
   const handleStockClick = (value: string, startDate: Date | null, endDate: Date | null) => {
     setStockSymbol(value)
     setDateRange([startDate, endDate])
+    
   }
 
   const updateCurrentPrice = (currentPrice: number) => {
@@ -81,7 +136,7 @@ function App() {
       setDateRange([newStartDate, newEndDate])
     }
   }
- 
+  
   return (
         
     <Authenticator>
@@ -89,18 +144,30 @@ function App() {
       <main>
         <button onClick={signOut}>Sign out</button>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <StockChart stockSymbol={stockSymbol} dateRange={dateRange} onCurrentPriceChange={updateCurrentPrice}/>
+          <StockChart 
+            stockSymbol={stockSymbol} 
+            dateRange={dateRange} 
+            onCurrentPriceChange={updateCurrentPrice}
+            
+            />
           <StockControls
            onAdvanceClick={handleAdvanceClick} 
            onAdvanceChange={handleAdvanceChange} 
            advanceDateValue={advanceDateValue} 
-           onBuy={handleBuyStock} 
-           onSell={handleSellStock} 
+           onBuy={() => handleBuyStock(numberStocksBuy)} 
+           onSell={() => handleSellStock(numberStocksSell)} 
            stocksOwned={stocksOwned}
            cash={cash} 
-           currentPrice={currentPrice} />
+           currentPrice={currentPrice}
+           onBuyChange={handleBuyChange}
+           onSellChange={handleSellChange} />
         </div>
-        <StockList onInputChange={handleSearchChange} searchTerm={searchTerm} onStockClick={handleStockClick}/>
+        <StockList 
+          onInputChange={handleSearchChange} 
+          searchTerm={searchTerm} 
+          onStockClick={handleStockClick}
+        />
+        
       </main>
         
       )}
