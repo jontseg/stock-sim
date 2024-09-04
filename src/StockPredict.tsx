@@ -5,19 +5,20 @@ interface StockPredictProps {
     currentPrice: number;
 }
 const StockPredict: React.FC<StockPredictProps> = ({ currentPrice }) => {
-let direction = Math.random()
+  const direction = Math.random()
+  let sign = 0
   if (direction < 0.5) {
-    direction = 1
+    sign = 1
   }
   else {
-    direction = -1
+    sign = -1
   }
   
   const change = Math.random() * (0.5 - 0) + 0;
 
   return (
     <div>
-        <p>Predicted Price: {currentPrice + (direction * change * currentPrice)}</p>
+        <p>Predicted Price: {currentPrice + (sign * change * currentPrice)}</p>
     </div>
   );
 };

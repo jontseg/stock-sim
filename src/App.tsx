@@ -1,10 +1,22 @@
 import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import client from './APIClient'; // Import the shared client
 import StockChart from './StockChart';
 import StockControls from './StockControls';
 import StockList from './StockList';
 
+const LIST_STOCKS_QUERY = `
+  query {
+    listStocks {
+      items {
+        StockSymbol
+        Date
+        Open
+      }
+    }
+  }
+`;
 
 async function showStocks() {
   try {
@@ -35,34 +47,35 @@ function App() {
   const [stocksOwned, setStocksOwned] = useState<number>(0);
   const [numberStocksBuy, setNumberStocksBuy] = useState<number>(0);
   const [numberStocksSell, setNumberStocksSell] = useState<number>(0);
-  // const [data, setData] = useState<{ Date: string; Open: number }[]>([]);
+  const [data, setData] = useState<{ Date: string; Open: number }[]>([]);
   
 
-  // useEffect(() => {
-  //   const fetchStockData = async () => {
-  //     const stocks = await showStocks();
-  //     if (stocks) {
-  //       const [startDate, endDate] = dateRange;
-  //       // Filter for the specific stock symbol "PLYM"
-  //       const filteredStocks = stocks
-  //         .filter((stock: { StockSymbol: string; Date: string }) => {
-  //           const stockDate = new Date(stock.Date);
-  //           return (stock.StockSymbol === stockSymbol &&
-  //             (!startDate || stockDate >= startDate) &&
-  //             (!endDate || stockDate <= endDate)
-  //           );
-  //         })
-  //         .map((stock: { Date: string; Open: number }) => ({
-  //           Date: new Date(stock.Date).toLocaleDateString(), // Format date for display
-  //           Open: stock.Open,
-  //         }));
-  //       setData(filteredStocks);
-  //       setCurrentPrice(filteredStocks[filteredStocks.length-1]["Open"])
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchStockData = async () => {
+      const stocks = await showStocks();
+      if (stocks && stockSymbol) {
+        const [startDate, endDate] = dateRange;
+        // Filter for the specific stock symbol "PLYM"
+        const filteredStocks = stocks
+          .filter((stock: { StockSymbol: string; Date: string }) => {
+            const stockDate = new Date(stock.Date);
+            return (stock.StockSymbol === stockSymbol &&
+              (!startDate || stockDate >= startDate) &&
+              (!endDate || stockDate <= endDate)
+            );
+          })
+          .map((stock: { Date: string; Open: number }) => ({
+            Date: new Date(stock.Date).toLocaleDateString(), // Format date for display
+            Open: stock.Open,
+          }));
+        setData(filteredStocks);
+        // console.log(data)
+        setCurrentPrice(filteredStocks[filteredStocks.length-1]["Open"])
+      }
+    };
 
-  //   fetchStockData();
-  // }, [stockSymbol, dateRange]);
+    fetchStockData();
+  }, [stockSymbol, dateRange]);
 
   const handleBuyStock = (numStocks: number) => {
     if (cash >= currentPrice * numStocks){
@@ -106,9 +119,9 @@ function App() {
     
   }
 
-  const updateCurrentPrice = (currentPrice: number) => {
-    setCurrentPrice(currentPrice);
-  }
+  // const updateCurrentPrice = (currentPrice: number) => {
+  //   setCurrentPrice(currentPrice);
+  // }
 
   function addDays(date: Date, days: number) {
     const result = new Date(date);
@@ -144,12 +157,9 @@ function App() {
       <main>
         <button onClick={signOut}>Sign out</button>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <StockChart 
-            stockSymbol={stockSymbol} 
-            dateRange={dateRange} 
-            onCurrentPriceChange={updateCurrentPrice}
-            
-            />
+          <StockChart
+            data={data}
+          />
           <StockControls
            onAdvanceClick={handleAdvanceClick} 
            onAdvanceChange={handleAdvanceChange} 
