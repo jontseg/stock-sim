@@ -1,5 +1,6 @@
 import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import client from './APIClient'; // Import the shared client
 import StockChart from './StockChart';
@@ -150,8 +151,31 @@ function App() {
     }
   }
   
+
+
+  const inputData = {
+    input: [39.4]  // Example data
+  };
+
+  const sendData = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/predict', inputData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      console.log('Prediction result:', response.data);
+    } catch (error) {
+      console.error('Error sending data:', error);
+    }
+  };
+
+  sendData()
+
+
   return (
-        
+    
     <Authenticator>
       {({ signOut }) => (
       <main>
