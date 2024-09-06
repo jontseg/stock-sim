@@ -45,6 +45,7 @@ function App() {
   const [advanceDateValue, setAdvanceDateValue] = useState<string>('Day');
   const [cash, setCash] = useState<number>(10000);
   const [currentPrice, setCurrentPrice] = useState<number>(0);
+  const [predictedPrice, setPredictedPrice] = useState<number>(0);
   const [stocksOwned, setStocksOwned] = useState<number>(0);
   const [numberStocksBuy, setNumberStocksBuy] = useState<number>(0);
   const [numberStocksSell, setNumberStocksSell] = useState<number>(0);
@@ -71,7 +72,9 @@ function App() {
           }));
         setData(filteredStocks);
         // console.log(data)
+        sendData()
         setCurrentPrice(filteredStocks[filteredStocks.length-1]["Open"])
+        
       }
     };
 
@@ -152,27 +155,22 @@ function App() {
   }
   
 
-
-  const inputData = {
-    input: [39.4]  // Example data
-  };
-
   const sendData = async () => {
+    const data = { input: [currentPrice] };
     try {
-      const response = await axios.post('http://localhost:5000/predict', inputData, {
+      const response = await axios.post('http://localhost:5000/predict', data, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
   
-      console.log('Prediction result:', response.data);
+      setPredictedPrice(response.data["prediction"][0])
     } catch (error) {
       console.error('Error sending data:', error);
     }
   };
 
-  sendData()
-
+  console.log("PREDICTED: ", predictedPrice)
 
   return (
     
@@ -194,7 +192,9 @@ function App() {
            cash={cash} 
            currentPrice={currentPrice}
            onBuyChange={handleBuyChange}
-           onSellChange={handleSellChange} />
+           onSellChange={handleSellChange} 
+           predictedPrice={predictedPrice}
+           />
         </div>
         <StockList 
           onInputChange={handleSearchChange} 
