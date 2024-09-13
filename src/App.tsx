@@ -1,8 +1,8 @@
 import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import client from './APIClient'; // Import the shared client
+import StockAPI from './StockAPI';
 import StockChart from './StockChart';
 import StockControls from './StockControls';
 import StockList from './StockList';
@@ -45,11 +45,12 @@ function App() {
   const [advanceDateValue, setAdvanceDateValue] = useState<string>('Day');
   const [cash, setCash] = useState<number>(10000);
   const [currentPrice, setCurrentPrice] = useState<number>(0);
-  const [predictedPrice, setPredictedPrice] = useState<number>(0);
+  // const [predictedPrice, setPredictedPrice] = useState<number>(0);
   const [stocksOwned, setStocksOwned] = useState<number>(0);
   const [numberStocksBuy, setNumberStocksBuy] = useState<number>(0);
   const [numberStocksSell, setNumberStocksSell] = useState<number>(0);
   const [data, setData] = useState<{ Date: string; Open: number }[]>([]);
+  const [days, setDays] = useState<number>(0);
   
 
   useEffect(() => {
@@ -71,8 +72,6 @@ function App() {
             Open: stock.Open,
           }));
         setData(filteredStocks);
-        // console.log(data)
-        sendData()
         setCurrentPrice(filteredStocks[filteredStocks.length-1]["Open"])
         
       }
@@ -113,6 +112,10 @@ function App() {
     setSearchTerm(value);
   }
 
+  const handleDaysChange = (value: number) => {
+    setDays(value);
+  }
+
   const handleAdvanceChange = (advanceInterval: string) => {
     setAdvanceDateValue(advanceInterval);
   }
@@ -120,7 +123,6 @@ function App() {
   const handleStockClick = (value: string, startDate: Date | null, endDate: Date | null) => {
     setStockSymbol(value)
     setDateRange([startDate, endDate])
-    
   }
 
   // const updateCurrentPrice = (currentPrice: number) => {
@@ -155,25 +157,23 @@ function App() {
   }
   
 
-  const sendData = async () => {
-    const data = { input: [currentPrice] };
-    try {
-      const response = await axios.post('http://localhost:5000/predict', data, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+  // const sendData = async () => {
+  //   const data = { input: [currentPrice] };
+  //   try {
+  //     const response = await axios.post('http://localhost:5000/predict', data, {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //     });
   
-      setPredictedPrice(response.data["prediction"][0])
-    } catch (error) {
-      console.error('Error sending data:', error);
-    }
-  };
+  //     setPredictedPrice(response.data["prediction"][0])
+  //   } catch (error) {
+  //     console.error('Error sending data:', error);
+  //   }
+  // };
 
-  console.log("PREDICTED: ", predictedPrice)
 
   return (
-    
     <Authenticator>
       {({ signOut }) => (
       <main>
@@ -192,15 +192,16 @@ function App() {
            cash={cash} 
            currentPrice={currentPrice}
            onBuyChange={handleBuyChange}
-           onSellChange={handleSellChange} 
-           predictedPrice={predictedPrice}
+           onSellChange={handleSellChange}
            />
         </div>
         <StockList 
-          onInputChange={handleSearchChange} 
+          onStockChange={handleSearchChange} 
+          onDaysChange={handleDaysChange}
           searchTerm={searchTerm} 
           onStockClick={handleStockClick}
         />
+        <StockAPI></StockAPI>
         
       </main>
         

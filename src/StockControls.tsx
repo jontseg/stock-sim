@@ -12,10 +12,9 @@ interface StockControlsProps {
   stocksOwned: number;
   onBuyChange: (value: number) => void;
   onSellChange: (value: number) => void;
-  predictedPrice: number;
 }
   
-const StockControls: React.FC<StockControlsProps> = ({ onAdvanceChange, advanceDateValue, onAdvanceClick, cash, currentPrice, onBuy, onSell, stocksOwned, onBuyChange, onSellChange, predictedPrice }) => {
+const StockControls: React.FC<StockControlsProps> = ({ onAdvanceChange, advanceDateValue, onAdvanceClick, cash, currentPrice, onBuy, onSell, stocksOwned, onBuyChange, onSellChange }) => {
   
 
   return (
@@ -54,7 +53,6 @@ const StockControls: React.FC<StockControlsProps> = ({ onAdvanceChange, advanceD
           <p>Cash: {cash}</p>
           <div>
             <p>Current Price: {currentPrice}</p>
-            <p>Predicted Price: {predictedPrice}</p>
           </div>
           <p>Stocks Owned: {stocksOwned}</p>
           <p>Portfolio Value: {stocksOwned*currentPrice}</p>

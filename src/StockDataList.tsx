@@ -74,7 +74,6 @@ const StockDataList: React.FC<StockDataListProps> = ({ handleClick, searchTerm }
             ([symbol, dates]) => {
               const minDate = new Date(Math.min(...dates.map(date => date.getTime())));
               const maxDate = new Date(Math.max(...dates.map(date => date.getTime())));
-              console.log(symbol, minDate, maxDate)
               return { symbol, minDate, maxDate };
             }
             
