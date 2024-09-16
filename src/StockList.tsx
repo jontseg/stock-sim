@@ -1,24 +1,24 @@
 import React from 'react';
-import StockDataList from './StockDataList'; // Adjust the import path as necessary
 
 
 interface StockListProps {
   onStockChange: (value: string) => void;
+  onGo: () => void;
   onDaysChange: (value: number) => void;
-  onStockClick: (value: string, startDate: Date | null, endDate: Date | null) => void;
-  searchTerm: string;
+  // searchTerm: string;
 }
-const StockList: React.FC<StockListProps> = ({ onStockChange, onDaysChange, onStockClick, searchTerm }) => {
+const StockList: React.FC<StockListProps> = ({ onStockChange, onDaysChange, onGo }) => {
 
   const handleStockChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onStockChange(event.target.value);
   }
-
+  
   const handleDaysChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const days = parseInt(event.target.value, 10); // parse the input value as a number
     if (!isNaN(days)) {
       onDaysChange(days); // pass the number to onDaysChange
     }
+
   }
 
   return (
@@ -34,11 +34,9 @@ const StockList: React.FC<StockListProps> = ({ onStockChange, onDaysChange, onSt
         onChange={handleDaysChange}
       />
       <button
-
-      >
+        onClick={onGo}>
         Go
       </button>
-      <StockDataList searchTerm={searchTerm} handleClick={onStockClick}/>
     </div>
   );
 };

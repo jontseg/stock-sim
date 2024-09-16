@@ -1,3 +1,8 @@
+## How to run in dev environment
+from project root: npm run dev
+from finnhub-backend: node .\index.js
+
+
 ## AWS Amplify React+Vite Starter Template
 
 This repository provides a starter template for creating applications using React+Vite and AWS Amplify, emphasizing easy setup for authentication, API, and database capabilities.

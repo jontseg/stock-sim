@@ -1,43 +1,56 @@
 import React, { useEffect, useState } from 'react';
 
-type StockData = {
-    c: number;    // Current price
-    d: number;    // Change
-    dp: number;   // Percent change
-    h: number;    // High price of the day
-    l: number;    // Low price of the day
-    o: number;    // Open price of the day
-    pc: number;   // Previous close price
-  };
 
-const StockAPI: React.FC = () => {
+type StockData = {
+  c: number[];  // List of close prices
+  h: number[];  // List of high prices
+  l: number[];  // List of low prices
+  o: number[];  // List of open prices
+  s: 'ok' | 'no_data';  // Status of the response (either 'ok' or 'no_data')
+  t: number[];  // List of timestamps
+  v: number[];  // List of volume data
+};
+
+interface StockAPIProps {
+ stockSymbol: string;
+ updateData: (data: StockData) => void;
+}
+
+const StockAPI: React.FC<StockAPIProps> = ({ stockSymbol, updateData  }) => {
   const [data, setData] = useState<StockData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    const fetchStockData = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(
-          'http://localhost:3000/quote?symbol=AAPL'
-        );
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+    if (stockSymbol){
+      const fetchStockData = async () => {
+        setLoading(true);
+        try {
+          const response = await fetch(
+            `http://localhost:3000/candle?symbol=${stockSymbol}&resolution=D&from=1590988249&to=1591852249`
+          );
+  
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+  
+          const result: StockData = await response.json();
+          updateData(result)
+          // setData(result);
+        } catch (err) {
+          setError((err as Error).message);
+        } finally {
+          setLoading(false);
         }
+      };
+  
+      fetchStockData();
+    }
+    
+  }, [stockSymbol, updateData]);
 
-        const result: StockData = await response.json();
-        setData(result);
-      } catch (err) {
-        setError((err as Error).message);
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    fetchStockData();
-  }, []);
+  
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -47,12 +60,12 @@ const StockAPI: React.FC = () => {
   if (!data) {
     return <div>No data available</div>;
   }
-  return (
-    <div>
-      <h1>Stock Data for AAPL</h1>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-    </div>
-  );
+  // return (
+  //   <div>
+  //     <h1>Stock Data for AAPL</h1>
+      
+  //   </div>
+  // );
 };
 
 export default StockAPI;

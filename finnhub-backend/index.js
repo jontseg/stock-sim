@@ -18,11 +18,14 @@ api_key.apiKey = process.env.FINNHUB_API_KEY;
 const finnhubClient = new finnhub.DefaultApi();
 
 // API endpoint to get stock candles data
-app.get('/quote', (req, res) => {
+app.get('/candle', (req, res) => {
     const symbol = req.query.symbol || 'AAPL';
-
+    const resolution = req.query.resolution;
+    const from = req.query.from;
+    const to = req.query.to;
+    
     // Fetch stock data from Finnhub using a callback function
-    finnhubClient.quote(symbol, (error, data, response) => {
+    finnhubClient.stockCandles(symbol, resolution, from, to, (error, data, response) => {
         if (error) {
             console.error("Error fetching data from Finnhub API:", error);
             return res.status(500).json({ error: "Error fetching data from Finnhub API" });
@@ -30,6 +33,7 @@ app.get('/quote', (req, res) => {
         res.json(data);  // Return the stock data in JSON format
     });
 });
+
 
 // Start the server
 app.listen(port, () => {

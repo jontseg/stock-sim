@@ -1,23 +1,11 @@
 import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import client from './APIClient'; // Import the shared client
 import StockAPI from './StockAPI';
-import StockChart from './StockChart';
 import StockControls from './StockControls';
 import StockList from './StockList';
 
-const LIST_STOCKS_QUERY = `
-  query {
-    listStocks {
-      items {
-        StockSymbol
-        Date
-        Open
-      }
-    }
-  }
-`;
 
 async function showStocks() {
   try {
@@ -38,6 +26,30 @@ async function showStocks() {
 }
 
 
+function convertToUnixTimestamp(daysAgo) {
+  // Get the current date
+  const currentDate = new Date();
+
+  // Calculate the date `daysAgo` by subtracting the number of days from the current date
+  const pastDate = new Date(currentDate);
+  pastDate.setDate(currentDate.getDate() - daysAgo);
+
+  // Convert the past date to Unix timestamp (divide by 1000 to get seconds)
+  const unixTimestamp = Math.floor(pastDate.getTime() / 1000);
+
+  return unixTimestamp;
+}
+
+type StockData = {
+  c: number[];  // List of close prices
+  h: number[];  // List of high prices
+  l: number[];  // List of low prices
+  o: number[];  // List of open prices
+  s: 'ok' | 'no_data';  // Status of the response (either 'ok' or 'no_data')
+  t: number[];  // List of timestamps
+  v: number[];  // List of volume data
+};
+
 function App() {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [stockSymbol, setStockSymbol] = useState<string>('');
@@ -45,41 +57,13 @@ function App() {
   const [advanceDateValue, setAdvanceDateValue] = useState<string>('Day');
   const [cash, setCash] = useState<number>(10000);
   const [currentPrice, setCurrentPrice] = useState<number>(0);
-  // const [predictedPrice, setPredictedPrice] = useState<number>(0);
   const [stocksOwned, setStocksOwned] = useState<number>(0);
   const [numberStocksBuy, setNumberStocksBuy] = useState<number>(0);
   const [numberStocksSell, setNumberStocksSell] = useState<number>(0);
-  const [data, setData] = useState<{ Date: string; Open: number }[]>([]);
-  const [days, setDays] = useState<number>(0);
+  const [data, setData] = useState<StockData | null>(null);
+  const [daysAgo, setDaysAgo] = useState<number>(0);
+  const [from, setFrom] = useState<number>(0);
   
-
-  useEffect(() => {
-    const fetchStockData = async () => {
-      const stocks = await showStocks();
-      if (stocks && stockSymbol) {
-        const [startDate, endDate] = dateRange;
-        // Filter for the specific stock symbol "PLYM"
-        const filteredStocks = stocks
-          .filter((stock: { StockSymbol: string; Date: string }) => {
-            const stockDate = new Date(stock.Date);
-            return (stock.StockSymbol === stockSymbol &&
-              (!startDate || stockDate >= startDate) &&
-              (!endDate || stockDate <= endDate)
-            );
-          })
-          .map((stock: { Date: string; Open: number }) => ({
-            Date: new Date(stock.Date).toLocaleDateString(), // Format date for display
-            Open: stock.Open,
-          }));
-        setData(filteredStocks);
-        setCurrentPrice(filteredStocks[filteredStocks.length-1]["Open"])
-        
-      }
-    };
-
-    fetchStockData();
-  }, [stockSymbol, dateRange]);
-
   const handleBuyStock = (numStocks: number) => {
     if (cash >= currentPrice * numStocks){
       const newStocksOwned = stocksOwned + numStocks
@@ -113,21 +97,12 @@ function App() {
   }
 
   const handleDaysChange = (value: number) => {
-    setDays(value);
+    setDaysAgo(value);
   }
 
   const handleAdvanceChange = (advanceInterval: string) => {
     setAdvanceDateValue(advanceInterval);
   }
-
-  const handleStockClick = (value: string, startDate: Date | null, endDate: Date | null) => {
-    setStockSymbol(value)
-    setDateRange([startDate, endDate])
-  }
-
-  // const updateCurrentPrice = (currentPrice: number) => {
-  //   setCurrentPrice(currentPrice);
-  // }
 
   function addDays(date: Date, days: number) {
     const result = new Date(date);
@@ -155,23 +130,16 @@ function App() {
       setDateRange([newStartDate, newEndDate])
     }
   }
-  
 
-  // const sendData = async () => {
-  //   const data = { input: [currentPrice] };
-  //   try {
-  //     const response = await axios.post('http://localhost:5000/predict', data, {
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //     });
-  
-  //     setPredictedPrice(response.data["prediction"][0])
-  //   } catch (error) {
-  //     console.error('Error sending data:', error);
-  //   }
-  // };
 
+  const handleGo = () => {
+    setStockSymbol(searchTerm);
+    setFrom(convertToUnixTimestamp(daysAgo));
+  }
+  
+  const updateData = (data: StockData) => {
+    setData(data)
+  }
 
   return (
     <Authenticator>
@@ -179,9 +147,9 @@ function App() {
       <main>
         <button onClick={signOut}>Sign out</button>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <StockChart
+          {/* <StockChart
             data={data}
-          />
+          /> */}
           <StockControls
            onAdvanceClick={handleAdvanceClick} 
            onAdvanceChange={handleAdvanceChange} 
@@ -196,13 +164,16 @@ function App() {
            />
         </div>
         <StockList 
-          onStockChange={handleSearchChange} 
+          onStockChange={handleSearchChange}
+          onGo={handleGo}
           onDaysChange={handleDaysChange}
-          searchTerm={searchTerm} 
-          onStockClick={handleStockClick}
         />
-        <StockAPI></StockAPI>
-        
+
+        <StockAPI
+          stockSymbol={stockSymbol}
+          updateData={updateData}
+          >
+        </StockAPI>        
       </main>
         
       )}
