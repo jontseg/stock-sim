@@ -3,6 +3,7 @@ import '@aws-amplify/ui-react/styles.css';
 import { useState } from 'react';
 import client from './APIClient'; // Import the shared client
 import StockAPI from './StockAPI';
+import StockChart from './StockChart';
 import StockControls from './StockControls';
 import StockList from './StockList';
 
@@ -53,44 +54,10 @@ type StockData = {
 function App() {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [stockSymbol, setStockSymbol] = useState<string>('');
-  const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
-  const [advanceDateValue, setAdvanceDateValue] = useState<string>('Day');
-  const [cash, setCash] = useState<number>(10000);
-  const [currentPrice, setCurrentPrice] = useState<number>(0);
-  const [stocksOwned, setStocksOwned] = useState<number>(0);
-  const [numberStocksBuy, setNumberStocksBuy] = useState<number>(0);
-  const [numberStocksSell, setNumberStocksSell] = useState<number>(0);
   const [data, setData] = useState<StockData | null>(null);
   const [daysAgo, setDaysAgo] = useState<number>(0);
   const [from, setFrom] = useState<number>(0);
-  
-  const handleBuyStock = (numStocks: number) => {
-    if (cash >= currentPrice * numStocks){
-      const newStocksOwned = stocksOwned + numStocks
-      const newCash = cash - (currentPrice * numStocks);
-      setStocksOwned(newStocksOwned);
-      setCash(newCash);
-    }
-    
-  }
-
-  const handleSellStock = (numStocks: number) => {
-    if (stocksOwned >= numStocks) {
-      const newStocksOwned = stocksOwned - numStocks
-      const newCash = cash + (currentPrice * numStocks);
-      setCash(newCash);
-      setStocksOwned(newStocksOwned)
-    }
-    
-  }
-
-  const handleBuyChange = (value: number) => {
-    setNumberStocksBuy(value);
-  }
-
-  const handleSellChange = (value: number) => {
-    setNumberStocksSell(value);
-  }
+  const oneDayInSeconds = 86400;
 
   const handleSearchChange = (value: string) => {
     setSearchTerm(value);
@@ -99,38 +66,6 @@ function App() {
   const handleDaysChange = (value: number) => {
     setDaysAgo(value);
   }
-
-  const handleAdvanceChange = (advanceInterval: string) => {
-    setAdvanceDateValue(advanceInterval);
-  }
-
-  function addDays(date: Date, days: number) {
-    const result = new Date(date);
-    result.setDate(result.getDate() + days);
-    return result;
-  }
-
-  const handleAdvanceClick = (value: string) => {
-    if (dateRange[0] && dateRange[1]){
-      const newStartDate = new Date(dateRange[0])
-      let newEndDate = new Date(dateRange[1]);
-      if (value === "Day"){
-        newEndDate = addDays(newEndDate, 1);
-      }
-      if (value === "Week"){
-        newEndDate = addDays(newEndDate, 7);
-      }
-      if (value === "Month"){
-        newEndDate.setMonth(newEndDate.getMonth() + 1);
-      }
-      if (value === "Year"){
-        newEndDate.setFullYear(newEndDate.getFullYear() + 1);
-      }
-
-      setDateRange([newStartDate, newEndDate])
-    }
-  }
-
 
   const handleGo = () => {
     setStockSymbol(searchTerm);
@@ -141,27 +76,24 @@ function App() {
     setData(data)
   }
 
+  const handleNextDay = () => {
+    const tomorrow = from + oneDayInSeconds
+    setFrom(tomorrow)
+  }
+
   return (
     <Authenticator>
       {({ signOut }) => (
       <main>
         <button onClick={signOut}>Sign out</button>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          {/* <StockChart
+          <StockChart
             data={data}
-          /> */}
+          />
           <StockControls
-           onAdvanceClick={handleAdvanceClick} 
-           onAdvanceChange={handleAdvanceChange} 
-           advanceDateValue={advanceDateValue} 
-           onBuy={() => handleBuyStock(numberStocksBuy)} 
-           onSell={() => handleSellStock(numberStocksSell)} 
-           stocksOwned={stocksOwned}
-           cash={cash} 
-           currentPrice={currentPrice}
-           onBuyChange={handleBuyChange}
-           onSellChange={handleSellChange}
-           />
+            onNextDay={handleNextDay}
+          >
+          </StockControls>
         </div>
         <StockList 
           onStockChange={handleSearchChange}
@@ -169,11 +101,16 @@ function App() {
           onDaysChange={handleDaysChange}
         />
 
+        
+
         <StockAPI
           stockSymbol={stockSymbol}
           updateData={updateData}
-          >
-        </StockAPI>        
+          from={from}
+        >
+        </StockAPI>
+        {/* {data?.o} */}
+        {/* {JSON.stringify(data)} */}
       </main>
         
       )}

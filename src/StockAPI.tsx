@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-
+import React, { useEffect, useRef, useState } from 'react';
 
 type StockData = {
   c: number[];  // List of close prices
@@ -14,58 +13,57 @@ type StockData = {
 interface StockAPIProps {
  stockSymbol: string;
  updateData: (data: StockData) => void;
+ from: number;
 }
 
-const StockAPI: React.FC<StockAPIProps> = ({ stockSymbol, updateData  }) => {
-  const [data, setData] = useState<StockData | null>(null);
+const StockAPI: React.FC<StockAPIProps> = ({ stockSymbol, updateData, from }) => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const cache = useRef<Record<string, StockData>>({}); // Cache for storing API responses
+  const previousFrom = useRef<number | null>(null); // Ref to track the last 'from' time
+  const previousStockSymbol = useRef<string | null>(null); // Ref to track the last 'from' time
 
   useEffect(() => {
-    if (stockSymbol){
-      const fetchStockData = async () => {
+    const fetchStockData = async () => {
+      if (stockSymbol && (previousFrom.current !== from || stockSymbol !== previousStockSymbol.current)) {
+        // Check cache first
+        
         setLoading(true);
+        const to = from + (86400*30);
         try {
           const response = await fetch(
-            `http://localhost:3000/candle?symbol=${stockSymbol}&resolution=D&from=1590988249&to=1591852249`
+            `http://localhost:3000/candle?symbol=${stockSymbol}&resolution=D&from=${from}&to=${to}`
           );
-  
+
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
           }
-  
+
           const result: StockData = await response.json();
-          updateData(result)
-          // setData(result);
+          cache.current[stockSymbol] = result; // Cache the response
+          updateData(result);
+          previousFrom.current = from; // Update the 'from' reference
+          previousStockSymbol.current = stockSymbol;
         } catch (err) {
           setError((err as Error).message);
         } finally {
           setLoading(false);
         }
-      };
-  
-      fetchStockData();
-    }
-    
-  }, [stockSymbol, updateData]);
+      }
+    };
 
+    // Only fetch stock data if 'from' time has changed or no cached data is available
+    fetchStockData();
+  }, [stockSymbol, updateData, from]);
 
-  
   if (loading) {
     return <div>Loading...</div>;
   }
   if (error) {
     return <div>Error: {error}</div>;
   }
-  if (!data) {
-    return <div>No data available</div>;
-  }
-  // return (
-  //   <div>
-  //     <h1>Stock Data for AAPL</h1>
-      
-  //   </div>
-  // );
+
+  return null;
 };
 
 export default StockAPI;
