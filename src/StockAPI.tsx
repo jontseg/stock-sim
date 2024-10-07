@@ -29,7 +29,7 @@ const StockAPI: React.FC<StockAPIProps> = ({ stockSymbol, updateData, from }) =>
         // Check cache first
         
         setLoading(true);
-        const to = from + (86400*30);
+        const to = from + (86400*7);
         try {
           const response = await fetch(
             `http://localhost:3000/candle?symbol=${stockSymbol}&resolution=D&from=${from}&to=${to}`
