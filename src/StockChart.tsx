@@ -38,7 +38,6 @@ interface CandlestickProps {
 
 const Candlestick: React.FC<CandlestickProps> = (props) => {
   const {
-    fill,
     x,
     y,
     width,
@@ -180,3 +179,4 @@ const StockChart: React.FC<StockChartProps> = ({ data }) => {
 };
 
 export default StockChart;
+
