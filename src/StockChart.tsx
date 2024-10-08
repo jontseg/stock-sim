@@ -170,7 +170,7 @@ const StockChart: React.FC<StockChartProps> = ({ data }) => {
         fill="#8884d8"
         shape={<Candlestick />}
       >
-        {preparedData.map((entry, index) => (
+        {preparedData.map((_entry, index) => (
           <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
         ))}
       </Bar>
