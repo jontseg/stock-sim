@@ -165,11 +165,8 @@ const StockChart: React.FC<StockChartProps> = ({ data }) => {
       <XAxis dataKey="ts" tickFormatter={formatXAxis} />
       <YAxis domain={[minValue ?? 0, maxValue ?? 100]} />
       <CartesianGrid strokeDasharray="3 3" />
-      <Bar
-        dataKey="openClose"
-        fill="#8884d8"
-        shape={<Candlestick />}
-      >
+      {/* @ts-ignore */}
+      <Bar dataKey="openClose" fill="#8884d8" shape={<Candlestick />}>
         {preparedData.map((_entry, index) => (
           <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
         ))}
