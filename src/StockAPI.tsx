@@ -31,7 +31,7 @@ const StockAPI: React.FC<StockAPIProps> = ({ stockSymbol, updateData, from }) =>
         setLoading(true);
         const to = from + (86400*7);
         try {
-          const response = await fetch(`https://1c9i0sjqcd.execute-api.us-west-1.amazonaws.com/prod/candle?symbol=${stockSymbol}&resolution=D&from=${from}&to=${to}`);
+          const response = await fetch(`https://1c9i0sjqcd.execute-api.us-west-1.amazonaws.com/candle?symbol=${stockSymbol}&resolution=D&from=${from}&to=${to}`);
 
 
           if (!response.ok) {
