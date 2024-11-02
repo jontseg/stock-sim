@@ -110,7 +110,7 @@ import * as CSS from 'csstype';
 const mainStyle: CSS.Properties = {
   fontFamily: 'Arial, sans-serif',
   backgroundColor: '#f4f7fb',
-  minHeight: '100vh',
+
 };
 
 const headerStyle: CSS.Properties = {
