@@ -1,5 +1,3 @@
-import { Authenticator } from '@aws-amplify/ui-react';
-import '@aws-amplify/ui-react/styles.css';
 import { useState } from 'react';
 import StockAPI from './StockAPI';
 import StockChart from './StockChart';
@@ -63,43 +61,39 @@ function App() {
   };
 
   return (
-    <Authenticator>
-      {({ signOut }) => (
-        <main style={mainStyle}>
-          <header style={headerStyle}>
-            <button onClick={signOut} style={buttonStyle}>Sign out</button>
-          </header>
-          <div style={containerStyle}>
-            <aside style={sidebarStyle}>
-              <h2 style={sidebarTitleStyle}>Stock Simulator</h2>
-              <div style={portfolioStyle}>
-                <h3>Portfolio</h3>
-                <p><strong>Cash:</strong> ${cash.toFixed(2)}</p>
-                <p><strong>Stocks Owned:</strong> {stocksOwned}</p>
-              </div>
-              <StockControls
-                onNextDay={handleNextDay}
-                onBuy={onBuy}
-                onSell={onSell}
-              />
-            </aside>
-            <div style={contentStyle}>
-              <StockChart data={data} />
-              <StockList
-                onStockChange={handleSearchChange}
-                onGo={handleGo}
-                onDaysChange={handleDaysChange}
-              />
-              <StockAPI
-                stockSymbol={stockSymbol}
-                updateData={updateData}
-                from={from}
-              />
-            </div>
+    <main style={mainStyle}>
+      <header style={headerStyle}>
+        <h1>Stock Simulator</h1>
+      </header>
+      <div style={containerStyle}>
+        <aside style={sidebarStyle}>
+          <h2 style={sidebarTitleStyle}>Stock Simulator</h2>
+          <div style={portfolioStyle}>
+            <h3>Portfolio</h3>
+            <p><strong>Cash:</strong> ${cash.toFixed(2)}</p>
+            <p><strong>Stocks Owned:</strong> {stocksOwned}</p>
           </div>
-        </main>
-      )}
-    </Authenticator>
+          <StockControls
+            onNextDay={handleNextDay}
+            onBuy={onBuy}
+            onSell={onSell}
+          />
+        </aside>
+        <div style={contentStyle}>
+          <StockChart data={data} />
+          <StockList
+            onStockChange={handleSearchChange}
+            onGo={handleGo}
+            onDaysChange={handleDaysChange}
+          />
+          <StockAPI
+            stockSymbol={stockSymbol}
+            updateData={updateData}
+            from={from}
+          />
+        </div>
+      </div>
+    </main>
   );
 }
 
@@ -110,24 +104,13 @@ import * as CSS from 'csstype';
 const mainStyle: CSS.Properties = {
   fontFamily: 'Arial, sans-serif',
   backgroundColor: '#f4f7fb',
-
 };
 
 const headerStyle: CSS.Properties = {
   padding: '1em',
   backgroundColor: '#0057d9',
   color: 'white',
-  textAlign: 'right',
-};
-
-const buttonStyle: CSS.Properties = {
-  padding: '10px 20px',
-  fontSize: '1em',
-  borderRadius: '5px',
-  border: 'none',
-  cursor: 'pointer',
-  backgroundColor: '#ff4d4d',
-  color: 'white',
+  textAlign: 'center',
 };
 
 const containerStyle: CSS.Properties = {
