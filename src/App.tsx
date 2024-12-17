@@ -116,6 +116,7 @@ const headerStyle: CSS.Properties = {
 const containerStyle: CSS.Properties = {
   display: 'flex',
   padding: '20px',
+  backgroundColor: ''
 };
 
 const sidebarStyle: CSS.Properties = {
