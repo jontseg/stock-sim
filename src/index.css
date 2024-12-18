@@ -1,6 +1,8 @@
+
+
 body {
   margin: 0;
-  background: linear-gradient(180deg, #0057d9, #ffffff);
+  background: linear-gradient(180deg, #000000, #273834);
   display: flex;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   height: 100vh;
@@ -15,6 +17,12 @@ main {
   align-items: stretch;
 }
 
+
+.text-grey {
+  color: #85858c;
+}
+
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -22,7 +30,7 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #767575;
   cursor: pointer;
   transition: border-color 0.25s;
   color: white;
@@ -64,11 +72,4 @@ a {
   text-decoration: none;
 }
 
-.chart-container {
-  background-color: white;
-  border-radius: 15px; /* Rounded corners */
-  padding: 20px; /* Space between the chart and the edges of the container */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  margin: 20px auto; /* Center the container and add top/bottom margins */
-  max-width: 650px; /* Optional: Limit the width of the container */
-}
+

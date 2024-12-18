@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import "./index.css";
 import StockAPI from './StockAPI';
 import StockChart from './StockChart';
 import StockControls from './StockControls';
 import StockList from './StockList';
+
 
 function convertToUnixTimestamp(daysAgo: number): number {
   const currentDate = new Date();
@@ -41,6 +43,7 @@ function App() {
   const updateData = (data: StockData) => setData(data);
 
   const handleNextDay = () => setFrom(from + oneDayInSeconds);
+  const handlePrevDay = () => setFrom(from - oneDayInSeconds);
 
   const onBuy = (numberOfStocks: number) => {
     if (data) {
@@ -62,19 +65,17 @@ function App() {
 
   return (
     <main style={mainStyle}>
-      <header style={headerStyle}>
-        <h1>Stock Simulator</h1>
-      </header>
-      <div style={containerStyle}>
+      <div  style={containerStyle}>
         <aside style={sidebarStyle}>
           <h2 style={sidebarTitleStyle}>Stock Simulator</h2>
           <div style={portfolioStyle}>
-            <h3>Portfolio</h3>
-            <p><strong>Cash:</strong> ${cash.toFixed(2)}</p>
-            <p><strong>Stocks Owned:</strong> {stocksOwned}</p>
+            <h3 className='text-grey'>Portfolio</h3>
+            <p className='text-grey'><strong>Cash:</strong> ${cash.toFixed(2)}</p>
+            <p className='text-grey'><strong>Stocks Owned:</strong> {stocksOwned}</p>
           </div>
           <StockControls
             onNextDay={handleNextDay}
+            onPrevDay={handlePrevDay}
             onBuy={onBuy}
             onSell={onSell}
           />
@@ -106,17 +107,17 @@ const mainStyle: CSS.Properties = {
   backgroundColor: '#f4f7fb',
 };
 
-const headerStyle: CSS.Properties = {
-  padding: '1em',
-  backgroundColor: '#0057d9',
-  color: 'white',
-  textAlign: 'center',
-};
+// const headerStyle: CSS.Properties = {
+//   padding: '1em',
+//   backgroundColor: '#0057d9',
+//   color: 'white',
+//   textAlign: 'center',
+// };
 
 const containerStyle: CSS.Properties = {
   display: 'flex',
   padding: '20px',
-  backgroundColor: ''
+  backgroundColor: 'grey'
 };
 
 const sidebarStyle: CSS.Properties = {
@@ -129,7 +130,7 @@ const sidebarStyle: CSS.Properties = {
 };
 
 const sidebarTitleStyle: CSS.Properties = {
-  color: '#0057d9',
+  color: '#85858c',
   textAlign: 'center',
 };
 

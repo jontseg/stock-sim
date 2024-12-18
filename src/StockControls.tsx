@@ -1,13 +1,14 @@
+import { SlArrowLeft, SlArrowRight } from "react-icons/sl";
 import './index.css';
 
-
 interface StockControlsProps {
-  onNextDay: () => void; 
+  onNextDay: () => void;
+  onPrevDay: () => void; 
   onBuy: (value: number) => void;
   onSell: (value: number) => void
 }
   
-const StockControls: React.FC<StockControlsProps> = ({ onNextDay, onBuy, onSell }) => {
+const StockControls: React.FC<StockControlsProps> = ({ onPrevDay, onNextDay, onBuy, onSell }) => {
   
 
   return (
@@ -22,8 +23,12 @@ const StockControls: React.FC<StockControlsProps> = ({ onNextDay, onBuy, onSell 
         Sell
         </button>
         <button
+          onClick={onPrevDay}>
+            <SlArrowLeft />
+        </button>
+        <button
           onClick={onNextDay}>
-            Next Day
+            <SlArrowRight />
         </button>
     </div>
   );
