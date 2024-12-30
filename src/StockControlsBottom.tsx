@@ -1,14 +1,14 @@
 import { SlArrowLeft, SlArrowRight } from "react-icons/sl";
 import './index.css';
 
-interface StockControlsProps {
+interface StockControlsBottomProps {
   onNextDay: () => void;
   onPrevDay: () => void; 
   onBuy: (value: number) => void;
   onSell: (value: number) => void
 }
   
-const StockControls: React.FC<StockControlsProps> = ({ onPrevDay, onNextDay, onBuy, onSell }) => {
+const StockControlsBottom: React.FC<StockControlsBottomProps> = ({ onPrevDay, onNextDay, onBuy, onSell }) => {
   
 
   return (
@@ -34,4 +34,4 @@ const StockControls: React.FC<StockControlsProps> = ({ onPrevDay, onNextDay, onB
   );
 };
 
-export default StockControls;
+export default StockControlsBottom;

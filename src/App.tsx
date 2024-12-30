@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import "./index.css";
 import StockAPI from './StockAPI';
 import StockChart from './StockChart';
-import StockControls from './StockControls';
-import StockList from './StockList';
+import StockControlsBottom from './StockControlsBottom';
+import StockControlsTop from './StockControlsTop';
 
 
 function convertToUnixTimestamp(daysAgo: number): number {
@@ -23,6 +23,9 @@ type StockData = {
   v: number[];
 };
 
+
+// Define allowed resolution values
+type Resolution = 1 | 5 | 15 | 30 | 60 | 'D' | 'W' | 'M';
 function App() {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [stockSymbol, setStockSymbol] = useState<string>('');
@@ -31,6 +34,7 @@ function App() {
   const [from, setFrom] = useState<number>(0);
   const [cash, setCash] = useState<number>(10000);
   const [stocksOwned, setStocksOwned] = useState<number>(0);
+  const [resolution, setResolution] = useState<Resolution>(60)
   const oneDayInSeconds = 86400;
 
   const handleSearchChange = (value: string) => setSearchTerm(value);
@@ -63,6 +67,10 @@ function App() {
     }
   };
 
+  const handleResolutionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setResolution(event.target.value as Resolution)
+  }
+
   return (
     <main style={mainStyle}>
       <div  style={containerStyle}>
@@ -73,24 +81,28 @@ function App() {
             <p className='text-grey'><strong>Cash:</strong> ${cash.toFixed(2)}</p>
             <p className='text-grey'><strong>Stocks Owned:</strong> {stocksOwned}</p>
           </div>
-          <StockControls
-            onNextDay={handleNextDay}
-            onPrevDay={handlePrevDay}
-            onBuy={onBuy}
-            onSell={onSell}
-          />
+          
         </aside>
         <div style={contentStyle}>
-          <StockChart data={data} />
-          <StockList
-            onStockChange={handleSearchChange}
-            onGo={handleGo}
-            onDaysChange={handleDaysChange}
-          />
           <StockAPI
             stockSymbol={stockSymbol}
             updateData={updateData}
             from={from}
+            resolution={resolution}
+          />
+          <StockControlsTop
+            onStockChange={handleSearchChange}
+            onGo={handleGo}
+            onDaysChange={handleDaysChange}
+            onResolutionChange={handleResolutionChange}
+            resolution={resolution}
+          />
+          <StockChart data={data} />
+          <StockControlsBottom
+            onNextDay={handleNextDay}
+            onPrevDay={handlePrevDay}
+            onBuy={onBuy}
+            onSell={onSell}
           />
         </div>
       </div>
@@ -150,3 +162,6 @@ const contentStyle: CSS.Properties = {
   alignItems: 'center',
   gap: '20px',
 };
+
+
+

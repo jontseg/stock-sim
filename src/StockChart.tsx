@@ -100,6 +100,7 @@ const Candlestick: React.FC<CandlestickProps> = (props) => {
   );
 };
 
+
 type PreparedData = {
   high: number;
   low: number;

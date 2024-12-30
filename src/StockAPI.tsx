@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+
 type StockData = {
   c: number[];  // List of close prices
   h: number[];  // List of high prices
@@ -9,14 +10,17 @@ type StockData = {
   t: number[];  // List of timestamps
   v: number[];  // List of volume data
 };
+type Resolution = 1 | 5 | 15 | 30 | 60 | 'D' | 'W' | 'M';
+
 
 interface StockAPIProps {
  stockSymbol: string;
  updateData: (data: StockData) => void;
  from: number;
+ resolution: Resolution;
 }
 
-const StockAPI: React.FC<StockAPIProps> = ({ stockSymbol, updateData, from }) => {
+const StockAPI: React.FC<StockAPIProps> = ({ stockSymbol, updateData, from, resolution }) => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const cache = useRef<Record<string, StockData>>({}); // Cache for storing API responses
@@ -31,7 +35,7 @@ const StockAPI: React.FC<StockAPIProps> = ({ stockSymbol, updateData, from }) =>
         setLoading(true);
         const to = from + (86400*7);
         try {
-          const response = await fetch(`https://1c9i0sjqcd.execute-api.us-west-1.amazonaws.com/candle?symbol=${stockSymbol}&resolution=D&from=${from}&to=${to}`);
+          const response = await fetch(`https://1c9i0sjqcd.execute-api.us-west-1.amazonaws.com/candle?symbol=${stockSymbol}&resolution=${resolution}&from=${from}&to=${to}`);
 
 
           if (!response.ok) {
