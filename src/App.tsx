@@ -1,3 +1,4 @@
+import * as CSS from 'csstype';
 import React, { useState } from 'react';
 import "./index.css";
 import StockAPI from './StockAPI';
@@ -46,8 +47,21 @@ function App() {
 
   const updateData = (data: StockData) => setData(data);
 
-  const handleNextDay = () => setFrom(from + oneDayInSeconds);
-  const handlePrevDay = () => setFrom(from - oneDayInSeconds);
+  const resolutionInSeconds: Record<Resolution, number> = {
+    1: 60,         // 1 minute
+    5: 300,        // 5 minutes
+    15: 900,       // 15 minutes
+    30: 1800,      // 30 minutes
+    60: 3600,      // 1 hour
+    D: 86400,      // 1 day
+    W: 604800,     // 1 week
+    M: 2592000,    // Approx 1 month (30 days)
+  };
+
+  // const to = from + resolutionInSeconds[resolution]; 
+
+  const handleNextDay = () => setFrom(from + resolutionInSeconds["D"]);
+  const handlePrevDay = () => setFrom(from - resolutionInSeconds["D"]);
 
   const onBuy = (numberOfStocks: number) => {
     if (data) {
@@ -74,15 +88,6 @@ function App() {
   return (
     <main style={mainStyle}>
       <div  style={containerStyle}>
-        <aside style={sidebarStyle}>
-          <h2 style={sidebarTitleStyle}>Stock Simulator</h2>
-          <div style={portfolioStyle}>
-            <h3 className='text-grey'>Portfolio</h3>
-            <p className='text-grey'><strong>Cash:</strong> ${cash.toFixed(2)}</p>
-            <p className='text-grey'><strong>Stocks Owned:</strong> {stocksOwned}</p>
-          </div>
-          
-        </aside>
         <div style={contentStyle}>
           <StockAPI
             stockSymbol={stockSymbol}
@@ -103,6 +108,8 @@ function App() {
             onPrevDay={handlePrevDay}
             onBuy={onBuy}
             onSell={onSell}
+            cash={cash}
+            stocksOwned={stocksOwned}
           />
         </div>
       </div>
@@ -111,8 +118,6 @@ function App() {
 }
 
 export default App;
-
-import * as CSS from 'csstype';
 
 const mainStyle: CSS.Properties = {
   fontFamily: 'Arial, sans-serif',
@@ -130,29 +135,6 @@ const containerStyle: CSS.Properties = {
   display: 'flex',
   padding: '20px',
   backgroundColor: 'grey'
-};
-
-const sidebarStyle: CSS.Properties = {
-  width: '300px',
-  backgroundColor: '#ffffff',
-  borderRadius: '8px',
-  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-  padding: '20px',
-  marginRight: '20px',
-};
-
-const sidebarTitleStyle: CSS.Properties = {
-  color: '#85858c',
-  textAlign: 'center',
-};
-
-const portfolioStyle: CSS.Properties = {
-  padding: '15px',
-  borderRadius: '8px',
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-  backgroundColor: '#f9f9f9',
-  textAlign: 'center',
-  marginBottom: '20px',
 };
 
 const contentStyle: CSS.Properties = {

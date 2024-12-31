@@ -22,6 +22,10 @@ main {
   color: #85858c;
 }
 
+.text-white {
+  color: #ffffff;
+}
+
 
 button {
   border-radius: 8px;
@@ -73,3 +77,20 @@ a {
 }
 
 
+.controls-row {
+  display: flex;
+  align-items: center; /* Align items vertically */
+  justify-content: space-between; /* Distribute space evenly */
+  gap: 10px; /* Add space between elements */
+}
+
+.controls-row p {
+  margin: 0; /* Remove default margin */
+}
+
+.controls-row button {
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}

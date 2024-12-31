@@ -43,7 +43,7 @@ const StockControlsTop: React.FC<StockControlsTopProps> = ({ onStockChange, onDa
           </select>
       <input
         type="text"
-        placeholder="Search stock symbols"
+        placeholder="Stock Symbol"
         onChange={handleStockChange}
       />
       <input

@@ -33,6 +33,18 @@ const StockAPI: React.FC<StockAPIProps> = ({ stockSymbol, updateData, from, reso
         // Check cache first
         
         setLoading(true);
+        // Mapping resolution to duration in seconds
+        const resolutionInSeconds: Record<Resolution, number> = {
+          1: 60,         // 1 minute
+          5: 300,        // 5 minutes
+          15: 900,       // 15 minutes
+          30: 1800,      // 30 minutes
+          60: 3600,      // 1 hour
+          D: 86400,      // 1 day
+          W: 604800,     // 1 week
+          M: 2592000,    // Approx 1 month (30 days)
+        };
+        
         const to = from + (86400*7);
         try {
           const response = await fetch(`https://1c9i0sjqcd.execute-api.us-west-1.amazonaws.com/candle?symbol=${stockSymbol}&resolution=${resolution}&from=${from}&to=${to}`);
@@ -57,7 +69,7 @@ const StockAPI: React.FC<StockAPIProps> = ({ stockSymbol, updateData, from, reso
 
     // Only fetch stock data if 'from' time has changed or no cached data is available
     fetchStockData();
-  }, [stockSymbol, updateData, from]);
+  }, [stockSymbol, updateData, from, resolution]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -68,5 +80,8 @@ const StockAPI: React.FC<StockAPIProps> = ({ stockSymbol, updateData, from, reso
 
   return null;
 };
+
+
+
 
 export default StockAPI;
